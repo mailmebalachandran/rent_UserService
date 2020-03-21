@@ -1,9 +1,23 @@
 const expect = require('chai').expect;
 const request = require('supertest');
 const User = require('../../models/User');
+require('dotenv/config');
 
 const app = require('../../app');
+app.listen(process.env.TESTING_PORT);
+console.log("Listening to the port : " + process.env.TESTING_PORT);
 let token;
+
+let firstUser = {
+    FirstName:"Balachandran",
+    MiddleName:"",
+    LastName: "Kanagasundaram",
+    PhoneNumber: "9894130966",
+    EmailId: "mailme.balachandran@gmail.com",
+    UserName: "bala",
+    Password: "nullvoid",
+    CreatedBy : "Admin"
+}
 
 let defaultUser = {
         FirstName:"Geetha",
@@ -28,24 +42,40 @@ let updatedUser = {
 let saveUserId;
 
 describe('POST /user', () =>{
-    before((done) => {
-        User.remove({EmailId: "bgeetha2514@gmail.com"});
-        done();
+    before(async () => {
+        const userData = new User(firstUser);
+        await userData.save();
     })
 
-    it('Authenticate User ', (done) => { 
-        console.log("hitted Authenticate User");
+    after(async () => {
+        await User.deleteOne({EmailId: 'mailme.balachandran@gmail.com'});
+    })
+
+    it('Get User with invalid authorization', function(done) {
         request(app)
-                    .post('/userService/authenticateUser')
-                    .send({ UserName: "balachandran", Password: "nullvoid" })
-                    .then((res) => {
-                        const body = res.body;
-                        token = body.token;
-                        done();  
-                    })
+            .get('/userService/getUsers')
+            .set('authorization', 'bearer ' +token)
+            .then((res) => {
+                const body = res.body;
+                expect(body).to.contain.property('message');
+                done();
+            })
+            .catch((err) => {done(err);});
     });
 
-    it('OK, creating a new user', function(done) {
+    it('Authenticate User ', (done) => { 
+        request(app)
+            .post('/userService/authenticateUser')
+            .send({ UserName: "bala", Password: "nullvoid" })
+            .then((res) => {
+                const body = res.body;
+                token = body.token;
+                expect(body).to.contain.property('token');
+                done();  
+            })
+    });
+
+    it('Creating a new user', function(done) {
         try
         {
         request(app)
@@ -67,7 +97,6 @@ describe('POST /user', () =>{
             })
         }
         catch(err){
-            console.log(err);
         }
             
     });
@@ -87,14 +116,12 @@ describe('POST /user', () =>{
 
     it('Update User', function(done) {
         updatedUser._id = saveUserId;
-        console.log(saveUserId);
         request(app)
             .put('/userService/updateUser') 
             .set('authorization', 'bearer ' + token)
             .send(updatedUser)
             .then((res) => {
                 const body = res.body;
-                console.log(body);
                 expect(body).to.contain.property('_id');
                 expect(body).to.contain.property('FirstName');
                 expect(body).to.contain.property('MiddleName');
@@ -121,6 +148,18 @@ describe('POST /user', () =>{
                 done();
             })
             .catch((err) => {done(err);});
-            
     });
+
+    it('Get User after all test case passed', function(done) {
+        request(app)
+            .get('/userService/getUsers')
+            .set('authorization', 'bearer ' +token)
+            .then((res) => {
+                const body = res.body;
+                expect(body).to.be.an('array').to.have.length.to.greaterThan(0);
+                done();
+            })
+            .catch((err) => {done(err);});
+    });
+
 });
