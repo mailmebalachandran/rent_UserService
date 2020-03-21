@@ -24,6 +24,9 @@ mongoose.connect(process.env.DB_CONNECTION, {useUnifiedTopology: true, useNewUrl
     console.log("Connected to DB");})
 .catch((err) => {console.log("Connection to DB was wrong.");})
 
-app.listen(process.env.SERVICE_PORT);
-console.log("Listening to the port : " + process.env.SERVICE_PORT);
+if(process.env.NODE_ENV != "test")
+{
+    app.listen(process.env.SERVICE_PORT);
+    console.log("Listening to the port : " + process.env.SERVICE_PORT);
+}
 module.exports = app;
