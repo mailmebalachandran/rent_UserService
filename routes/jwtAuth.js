@@ -1,21 +1,22 @@
-const express = require('express');
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 
-const verifyToken = (req, res, next) =>{
+const verifyToken = async (req, res, next) =>{
     try{
         
     const bearerHeader = req.headers['authorization'];
-
     if(bearerHeader !== undefined){
         const bearer = bearerHeader.split(' ');
         const bearerToken = bearer[1];
-        jwt.verify(bearerToken, process.env.JWT_PRIVATE_KEY, (err, authData) => {
-            if(err){
-                res.status(403).send({message:"Invalid Token"});
-            }
-            else{
-                next();
-            }
+        const tokenDetails = {
+            "access_token" : bearerToken
+        }
+        await axios.post(process.env.AUTH_SERVICE_URL + "authService/verifyToken", tokenDetails)
+        .then((res) =>{
+           next();
+        })
+        .catch((err) => {
+            return res.status(400).send({messsage: err.message});
         });
         
     }

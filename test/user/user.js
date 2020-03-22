@@ -51,17 +51,17 @@ describe('POST /user', () =>{
         await User.deleteOne({EmailId: 'mailme.balachandran@gmail.com'});
     })
 
-    it('Get User with invalid authorization', function(done) {
-        request(app)
-            .get('/userService/getUsers')
-            .set('authorization', 'bearer ' +token)
-            .then((res) => {
-                const body = res.body;
-                expect(body).to.contain.property('message');
-                done();
-            })
-            .catch((err) => {done(err);});
-    });
+    // it('Get User with invalid authorization', function(done) {
+    //     request(app)
+    //         .get('/userService/getUsers')
+    //         .set('authorization', 'bearer ' +token)
+    //         .then((res) => {
+    //             const body = res.body;
+    //             expect(body).to.contain.property('message');
+    //             done();
+    //         })
+    //         .catch((err) => {done(err);});
+    // });
 
     it('Authenticate User ', (done) => { 
         request(app)
@@ -69,8 +69,9 @@ describe('POST /user', () =>{
             .send({ UserName: "bala", Password: "nullvoid" })
             .then((res) => {
                 const body = res.body;
-                token = body.token;
-                expect(body).to.contain.property('token');
+                token = body.access_token;
+                expect(body).to.contain.property('access_token');
+                expect(body).to.contain.property('refresh_token');
                 done();  
             })
     });
@@ -84,6 +85,7 @@ describe('POST /user', () =>{
             .send(defaultUser)
             .then((res) => {
                 const body = res.body;
+                console.log(body);
                 saveUserId = body._id;
                 expect(body).to.contain.property('_id');
                 expect(body).to.contain.property('FirstName');

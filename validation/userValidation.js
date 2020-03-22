@@ -28,14 +28,14 @@ const updateValidation = (body) =>{
 }
 
 const deleteValidation = (body) =>{
-    const schema = Joi.object().keys({
+    const schema = Joi.object({
         _id:Joi.string().required()
     })
     return schema.validate(body).error
 }
 
 const authenticateValidation = (body) => {
-    const schema = Joi.object().keys({
+    const schema = Joi.object({
         UserName : Joi.string().required(),
         Password : Joi.string().required()
     });

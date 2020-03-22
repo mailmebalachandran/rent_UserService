@@ -1,7 +1,7 @@
 const userService = require('../services/userService');
-const jwt = require('jsonwebtoken');
 const userValidation = require('../validation/userValidation');
-const asyncMiddleware = require('../common/asyncMiddleware');
+const axios = require('axios');
+require('dotenv/config');
 
 const getUsers = async (req, res) => {
         const getUserData = await userService.getUsers();
@@ -14,7 +14,8 @@ const saveUser = async (req, res) => {
             return res.status(400).send({message:validationResult.details[0].message})
         }
         const token = req.headers['authorization'];
-        const authData = jwt.decode(token.split(' ')[1]);
+        const authData = await decodeToken(token.split(' ')[1]);
+        
         const {
             FirstName,
             MiddleName,
@@ -53,7 +54,7 @@ const updateUser = async (req, res) => {
             return res.status(400).send({message:validationResult.details[0].messsage})
         }
         const token = req.headers['authorization'];
-        const authData = jwt.decode(token.split(' ')[1]);
+        const authData = await decodeToken(token.split(' ')[1]);
         const {
             FirstName,
             MiddleName,
@@ -93,18 +94,34 @@ const authenticateUser = async (req, res) => {
             return res.status(400).send({message:validationResult.details[0].message})
         }
         const user = await userService.authenticateUser(req.body.UserName, req.body.Password);
-        if(user != null || user != undefined)
-        {
-        jwt.sign({ user: user }, process.env.JWT_PRIVATE_KEY, { expiresIn: '1d' }, (err, token) => {
-            return res.status(200).send({
-                token: token
+         if(user != null || user != undefined)
+         {
+            let accessAndRefreshToken = await axios.post(process.env.AUTH_SERVICE_URL + "authService/authenticateUser", user)
+            .then((res) =>{
+               return res.data;
+            })
+            .catch((err) => {
+                return res.status(400).send({messsage: err.message});
             });
-        });
+            return res.status(200).send(accessAndRefreshToken);
         }
         else{
             return res.status(400).send({message : "Invalid Credentials"});
         }
 };
+
+const decodeToken = async (token) =>{
+    const tokenDetails = {
+        "access_token": token
+    }
+    return await axios.post(process.env.AUTH_SERVICE_URL + "authService/decodeToken", tokenDetails)
+            .then((res) =>{
+               return res.data;
+            })
+            .catch((err) => {
+                return ({message: err});
+            });
+}
 
 
 module.exports = {
