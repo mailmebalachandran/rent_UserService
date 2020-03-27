@@ -11,7 +11,7 @@ const verifyToken = async (req, res, next) =>{
         const tokenDetails = {
             "access_token" : bearerToken
         }
-        await axios.post(process.env.AUTH_SERVICE_URL + "authService/verifyToken", tokenDetails)
+        await axios.post(process.env.AUTH_SERVICE_URL + "api/authService/verifyToken", tokenDetails)
         .then((res) =>{
            next();
         })

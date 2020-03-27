@@ -96,7 +96,7 @@ const authenticateUser = async (req, res) => {
         const user = await userService.authenticateUser(req.body.UserName, req.body.Password);
          if(user != null || user != undefined)
          {
-            let accessAndRefreshToken = await axios.post(process.env.AUTH_SERVICE_URL + "authService/authenticateUser", user)
+            let accessAndRefreshToken = await axios.post(process.env.AUTH_SERVICE_URL + "api/authService/authenticateUser", user)
             .then((res) =>{
                return res.data;
             })

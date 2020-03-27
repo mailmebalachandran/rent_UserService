@@ -16,10 +16,10 @@ winston.add(new winston.transports.MongoDB({ db:process.env.DB_CONNECTION }));
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/userService',  userRoute);
+app.use('/api/userService',  userRoute);
 app.use(error);
 
-mongoose.connect(process.env.DB_CONNECTION, {useUnifiedTopology: true, useNewUrlParser: true})
+mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
     console.log("Connected to DB");})
 .catch((err) => {console.log("Connection to DB was wrong.");})
