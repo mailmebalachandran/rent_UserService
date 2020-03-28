@@ -24,7 +24,7 @@ const saveUser = async (user) => {
 
 const updateUser = async (user) => {
     try {
-        const updatedUser = await User.findByIdAndUpdate({_id : ObjectID(user._id)}, { $set: { "FirstName": user.FirstName, "MiddleName": user.MiddleName, "LastName": user.LastName, "PhoneNumber": user.PhoneNumber, "EmailId": user.EmailId, "UserName": user.UserName, "Password": user.Password, "UpdatedBy": user.UpdatedBy } });
+        const updatedUser = await User.findByIdAndUpdate({_id : ObjectID(user._id)}, { $set: user });
         return updatedUser;
     }
     catch(err) {

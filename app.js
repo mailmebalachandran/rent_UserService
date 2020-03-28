@@ -19,14 +19,17 @@ app.use(bodyParser.json());
 app.use('/api/userService',  userRoute);
 app.use(error);
 
-mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true })
 .then(() => {
     console.log("Connected to DB");})
 .catch((err) => {console.log("Connection to DB was wrong.");})
 
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+
 if(process.env.NODE_ENV != "test")
 {
     app.listen(process.env.SERVICE_PORT);
-    console.log("Listening to the port : " + process.env.SERVICE_PORT);
+    console.log("User Service Running On : " + process.env.SERVICE_PORT);
 }
 module.exports = app;

@@ -15,15 +15,18 @@ const userSchema = mongoose.Schema({
     },
     PhoneNumber: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     EmailId: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     UserName: {
         type:String,
-        required: true
+        required: true,
+        unique: true
     },
     Password: {
         type: String,
