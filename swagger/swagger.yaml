@@ -1,12 +1,108 @@
 swagger: "2.0"
 info:
   version: "1.0.0"
-  title: "User service"
-host: localhost:5000
-basepath: /
-schemes :
-  - "http"
-consumes:
-  - "application/json"
-produces:
-  - "application.json"
+  title: "Rent User Service"
+  contact:
+    email: "apiteam@swagger.io"
+host: "localhost:5000"
+basePath: "/api/userService/"
+
+tags:
+- name: "Users"
+  description: "User Management By Admin"
+schemes:
+- "http"
+paths:
+  /saveUser:
+    post:
+      tags:
+      - "Users"
+      summary: "Create new User"
+      description: "Create new user in the system by admin user"
+      operationId: "saveUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Object to create User"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      - in: "header"
+        name: "authorization"
+        description: "bearer tokenValue"
+        required: true
+        schema:
+          $ref: "#/definitions/AuthToken"
+      responses:
+        201:
+          description: "New User Created Successfully"
+          schema:
+            type: "object"
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid Request Data"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Server Error"
+  /getUsers:
+    get:
+      tags:
+      - "Users"
+      summary: "Get All Users"
+      description: "Retrieve all users available in the system"
+      operationId: "getUsers"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "header"
+        name: "authorization"
+        description: "bearer tokenValue"
+        required: true
+        schema:
+          $ref: "#/definitions/AuthToken"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+        401:
+          description: "Unauthorized"
+              
+        500:
+          description: "Server Error"
+definitions:
+  User:
+    type: "object"
+    properties:
+      FirstName:
+        type: "string"
+        format: "string"
+      MiddleName:
+        type: "string"
+        format: "string"
+      LastName:
+        type: "string"
+        format: "string"
+      PhoneNumber:
+        type: "string"
+        format: "string"
+      EmailId:
+        type: "string"
+        format: "string"
+      UserName:
+        type: "string"
+        format: "string"
+      Password:
+        type: "string"
+        format: "string"
+    xml:
+      name: "User"
+  AuthToken:
+      type: "string"
+      xml:
+        name: "Auth"

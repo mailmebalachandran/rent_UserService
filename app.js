@@ -8,6 +8,9 @@ const mongoose = require('mongoose');
 const userRoute = require('./routes/index');
 const error = require('./common/error'); 
 require('dotenv/config');
+const swaggerUi = require('swagger-ui-express')
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger/swagger.yaml');
 
 const app = express();
 
@@ -16,6 +19,7 @@ winston.add(new winston.transports.MongoDB({ db:process.env.DB_CONNECTION }));
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use('/api/userService/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/userService',  userRoute);
 app.use(error);
 
