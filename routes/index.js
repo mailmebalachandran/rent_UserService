@@ -5,6 +5,7 @@ const userController = require('../controllers/userController');
 const router = express.Router();
 
 router.get('/getUsers', jwtAuthValidation, userController.getUsers);
+router.get('/getUser', jwtAuthValidation, userController.getUser);
 router.post('/saveUser', jwtAuthValidation, userController.saveUser);
 router.put('/updateUser', jwtAuthValidation, userController.updateUser);
 router.delete('/deleteUser', jwtAuthValidation, userController.deleteUser);

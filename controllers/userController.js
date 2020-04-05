@@ -8,6 +8,12 @@ const getUsers = async (req, res) => {
     return res.status(200).send(getUserData);
 };
 
+const getUser = async (req, res) => {
+    console.log(req.body);
+    const getUserData = await userService.getUser(req.body._id);
+    return res.status(200).send(getUserData);
+};
+
 const saveUser = async (req, res) => {
     try {
         const validationResult = userValidation.saveValidation(req.body);
@@ -123,5 +129,6 @@ module.exports = {
     saveUser,
     updateUser,
     deleteUser,
-    authenticateUser
+    authenticateUser,
+    getUser
 };

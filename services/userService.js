@@ -11,6 +11,16 @@ const getUsers = async () => {
     }
 }
 
+const getUser = async (_id) => {
+    try {
+        const user = await User.findOne({_id});
+        return user;
+    }
+    catch(err) {
+        throw err;
+    }
+}
+
 const saveUser = async (user) => {
     try {
         const userData = new User(user);
@@ -65,6 +75,7 @@ const checkUserAlreadyExists = async (UserName) =>{
 
 module.exports = {
     getUsers,
+    getUser,
     saveUser,
     updateUser,
     deleteUser,
