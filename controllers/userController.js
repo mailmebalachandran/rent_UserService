@@ -9,8 +9,7 @@ const getUsers = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-    console.log(req.body);
-    const getUserData = await userService.getUser(req.body._id);
+    const getUserData = await userService.getUser(req.query._id);
     return res.status(200).send(getUserData);
 };
 
@@ -23,7 +22,6 @@ const saveUser = async (req, res) => {
         const token = req.headers['authorization'];
         const authData = await decodeToken(token.split(' ')[1]);
         req.body.CreatedBy = authData.user._id
-
         const checkUser = await userService.checkUserAlreadyExists(req.body.UserName);
 
         if (checkUser === undefined || checkUser === null) {
@@ -62,7 +60,6 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-
     try {
         const validationResult = userValidation.deleteValidation(req.body);
         if (validationResult != null) {
