@@ -28,12 +28,7 @@
     "winston-mongodb": "^5.0.1",
     "yamljs": "^0.3.0"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm test",
-      "pre-push": "npm test"
-    }
-  },
+  
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",

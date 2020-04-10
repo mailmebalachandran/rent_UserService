@@ -61,11 +61,11 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        const validationResult = userValidation.deleteValidation(req.body);
+        const validationResult = userValidation.deleteValidation(req.query);
         if (validationResult != null) {
             return res.status(400).send({ message: validationResult.details[0].message })
         }
-        const { deletedCount } = await userService.deleteUser(req.body._id)
+        const { deletedCount } = await userService.deleteUser(req.query._id)
         if( deletedCount && deletedCount>0) {
             return res.status(200).send({ message: "Deleted Successfully" });
         }
