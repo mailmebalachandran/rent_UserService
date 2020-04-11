@@ -65,7 +65,7 @@ describe('POST /user', () =>{
 
     it('Authenticate User ', (done) => { 
         request(app)
-            .post('/userService/authenticateUser')
+            .post('/api/userService/authenticateUser')
             .send({ UserName: "bala", Password: "nullvoid" })
             .then((res) => {
                 const body = res.body;
@@ -80,12 +80,11 @@ describe('POST /user', () =>{
         try
         {
         request(app)
-            .post('/userService/saveUser') 
+            .post('/api/userService/saveUser') 
             .set('authorization', 'bearer ' + token)
             .send(defaultUser)
             .then((res) => {
                 const body = res.body;
-                console.log(body);
                 saveUserId = body._id;
                 expect(body).to.contain.property('_id');
                 expect(body).to.contain.property('FirstName');
@@ -104,7 +103,7 @@ describe('POST /user', () =>{
     });
 
     it('User Name already exists', function(done) {
-        request(app).post('/userService/saveUser') 
+        request(app).post('/api/userService/saveUser') 
             .send(defaultUser)
             .set('authorization', 'bearer ' +token)
             .then((res) => {
@@ -119,7 +118,7 @@ describe('POST /user', () =>{
     it('Update User', function(done) {
         updatedUser._id = saveUserId;
         request(app)
-            .put('/userService/updateUser') 
+            .put('/api/userService/updateUser') 
             .set('authorization', 'bearer ' + token)
             .send(updatedUser)
             .then((res) => {
@@ -140,7 +139,7 @@ describe('POST /user', () =>{
 
     it('Delete User', function(done) {
         request(app)
-            .delete('/userService/deleteUser') 
+            .delete('/api/userService/deleteUser') 
             .send({"_id": saveUserId})
             .set('authorization', 'bearer ' +token)
             .then((res) => {
@@ -154,7 +153,7 @@ describe('POST /user', () =>{
 
     it('Get User after all test case passed', function(done) {
         request(app)
-            .get('/userService/getUsers')
+            .get('/api/userService/getUsers')
             .set('authorization', 'bearer ' +token)
             .then((res) => {
                 const body = res.body;
