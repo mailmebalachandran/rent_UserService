@@ -39,7 +39,7 @@ const userSchema = mongoose.Schema({
     CreatedDateTime: {
         type: String,
         required: true,
-        default: Date.now
+        default: new Date(Date.now()).toISOString()
     },
     UpdatedBy:{
         type:String,
@@ -48,7 +48,7 @@ const userSchema = mongoose.Schema({
     UpdatedDateTime: {
         type: String,
         requird: false,
-        default: Date.now
+        default: new Date(Date.now()).toISOString()
     }
 });
 

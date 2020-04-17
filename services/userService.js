@@ -63,6 +63,7 @@ const authenticateUser = async (userName, password) => {
 }
 
 const checkUserAlreadyExists = async (UserName) =>{
+    
     try{
         const user = await User.findOne({UserName});
         return user;
